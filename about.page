@@ -1,6 +1,6 @@
 ---
 title: Asset
-description: Add, remove, append, prepend and replace asset files from/to the HTML output without touching the layout files.
+description: Manage asset files without touching layout files.
 icon: 'M11,13.5V21.5H3V13.5H11M12,2L17.5,11H6.5L12,2M17.5,13C20,13 22,15 22,17.5C22,20 20,22 17.5,22C15,22 13,20 13,17.5C13,15 15,13 17.5,13Z'
 author: Taufik Nurrohman
 type: Markdown
@@ -10,7 +10,7 @@ use:
   '.\lot\x\layout': 1
 ...
 
-This extension works by finding two special places in the HTML document, i.e. right before the `</head>` and `</body>` tag, and then process all assets that have been added to the storage to be rendered as HTML tags in both places.
+Add, remove, or replace asset files from/to HTML without touching the layout files. This extension works by finding two special places in the HTML document, i.e. right before the `</head>` and `</body>` tag, and then process all assets that have been added to the storage to be rendered as HTML tags in both places.
 
 ~~~ .html
 <!DOCTYPE html>
@@ -70,4 +70,4 @@ JS
 
 Shortly after being added, this extension will process the file path and then it will be rendered as `<link>` tags for CSS files and `<script>` tags for JavaScript files.
 
-> **Note:** This extension will ignore files that don’t exist.
+**Note:** This extension will ignore files that don’t exist.
