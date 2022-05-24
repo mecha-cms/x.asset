@@ -1,0 +1,9 @@
+{
+  "description": "Manage asset files without touching layout files.",
+  "license": "GPL-3.0-or-later",
+  "name": "mecha-cms/x.asset",
+  "require": {
+    "mecha-cms/mecha": "*",
+    "mecha-cms/x.layout": "*"
+  }
+}
