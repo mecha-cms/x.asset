@@ -1,7 +1,7 @@
 <?php
 
 foreach ([
-    '.css' => function($value, $key) {
+    '*.css' => function($value, $key) {
         $link = $value['link'] ?? "";
         $path = $value['path'] ?? "";
         $x = false !== strpos($link, '://') || 0 === strpos($link, '//');
@@ -18,10 +18,9 @@ foreach ([
         $value[0] = 'link';
         $value[1] = false;
         $value[2]['rel'] = 'stylesheet';
-        unset($value['link'], $value['path'], $value['stack']);
         return new HTML($value);
     },
-    '.js' => function($value, $key) {
+    '*.js' => function($value, $key) {
         $link = $value['link'] ?? "";
         $path = $value['path'] ?? "";
         $x = false !== strpos($link, '://') || 0 === strpos($link, '//');
@@ -36,28 +35,26 @@ foreach ([
             $value[2]['src'] = $u;
         }
         $value[0] = 'script';
-        unset($value['link'], $value['path'], $value['stack']);
+        return new HTML($value);
+    },
+    'text/css' => function($value, $key) {
+        $v = explode(';', $value['link'] ?? "", 2)[1] ?? "";
+        $value[0] = 'style';
+        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr($v, 7)) : urldecode($v);
+        return new HTML($value);
+    },
+    'text/js' => function($value, $key) {
+        $v = explode(';', $value['link'] ?? "", 2)[1] ?? "";
+        $value[0] = 'script';
+        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr($v, 7)) : urldecode($v);
         return new HTML($value);
     }
 ] as $k => $v) {
     Asset::_($k, $v);
 }
 
-foreach (['script', 'style', 'template'] as $v) {
-    Asset::_($v, function(string $content, float $stack = 10, array $lot = []) use($v) {
-        $id = !empty($lot['id']) ? $lot['id'] : $v . ':' . sprintf('%u', crc32($content));
-        if (!isset(static::$lot[0][$v][$id])) {
-            static::$lot[1][$v][$id] = [
-                '0' => $v,
-                '1' => n(trim($content)),
-                '2' => $lot,
-                'link' => null,
-                'path' => null,
-                'stack' => (float) $stack
-            ];
-        }
-    });
-}
+// <https://www.rfc-editor.org/rfc/rfc9239#name-text-javascript>
+Asset::_('text/javascript', Asset::_('text/js'));
 
 function asset(...$lot) {
     return count($lot) < 2 ? Asset::get(...$lot) : Asset::set(...$lot);

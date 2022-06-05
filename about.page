@@ -4,7 +4,7 @@ description: Manage asset files without touching layout files.
 icon: 'M11,13.5V21.5H3V13.5H11M12,2L17.5,11H6.5L12,2M17.5,13C20,13 22,15 22,17.5C22,20 20,22 17.5,22C15,22 13,20 13,17.5C13,15 15,13 17.5,13Z'
 author: Taufik Nurrohman
 type: Markdown
-version: 2.0.1
+version: 2.1.0
 
 use:
   '.\lot\x\layout': 1
@@ -29,17 +29,38 @@ The first place is generally used to insert CSS assets, and the second place is 
 
 ### Usage
 
+This extension consists of three main methods:
+
+~~~ .php
+Asset::get(array|string $path = null);
+Asset::let(array|string $path = null);
+Asset::set(array|string $path = null, float $stack = 10, array $lot = []);
+~~~
+
+The `$path` parameter can be an URL, a file path or a data URI. It can also be an array of those values. The `$stack` parameter is available only for the `set` method and serves to determine the insertion position between assets. The bigger the value, the lower the asset position will be. You use the `$lot` parameter to provide additional data. This data is useful for the asset parser. By default, this data will be used as HTML attributes.
+
+~~~ .php
+// Given this statement…
+Asset::set('.\lot\asset\file-1.css', 3);
+Asset::set('.\lot\asset\file-2.css', 1);
+Asset::set('.\lot\asset\file-3.css', 2, ['media' => 'screen']);
+
+// Will produce this result…
+// <link href="http://127.0.0.1/lot/asset/file-2.css" rel="stylesheet">
+// <link href="http://127.0.0.1/lot/asset/file-3.css" media="screen" rel="stylesheet">
+// <link href="http://127.0.0.1/lot/asset/file-1.css" rel="stylesheet">
+~~~
+
 To append CSS assets to the `<head>` section, write this code in an `index.php` file:
 
 ~~~ .php
-Asset::set('path/to/file.css');
+Asset::set('.\lot\asset\file.css');
 ~~~
 
 To append inline CSS assets to the `<head>` section, write this code in an `index.php` file:
 
 ~~~ .php
-Asset::style(
-<<<CSS
+$style = <<<CSS
 :root {
   --background: #fff;
   --color: #000;
@@ -48,26 +69,33 @@ body {
   background: var(--background);
   color: var(--color);
 }
-CSS
-);
+CSS;
+
+Asset::set('data:text/css;base64,' . To::base64($style));
 ~~~
 
 To append JavaScript assets to the `<body>` section, write this code in an `index.php` file:
 
 ~~~ .php
-Asset::set('path/to/file.js');
+Asset::set('.\lot\asset\file.js');
 ~~~
 
 To append inline JavaScript assets to the `<body>` section, write this code in an `index.php` file:
 
 ~~~ .php
-Asset::script(
-<<<JS
+$script = <<<JS
 document.documentElement.classList.add('js');
-JS
-);
+JS;
+
+Asset::set('data:text/js;base64,' . To::base64($script));
+~~~
+
+You can also use the standard JavaScript MIME type as defined in [the specification](https://www.rfc-editor.org/rfc/rfc9239#name-text-javascript):
+
+~~~ .php
+Asset::set('data:text/javascript;base64,' . To::base64($script));
 ~~~
 
 Shortly after being added, this extension will process the file path and then it will be rendered as `<link>` tags for CSS files and `<script>` tags for JavaScript files.
 
-**Note:** This extension will ignore files that don’t exist.
+*[MIME]: Multipurpose Internet Mail Extensions
