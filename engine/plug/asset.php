@@ -1,7 +1,7 @@
 <?php
 
 foreach ([
-    '*.css' => function($value, $key) {
+    '*.css' => function ($value, $key) {
         $link = $value['link'] ?? "";
         $path = $value['path'] ?? "";
         $x = false !== strpos($link, '://') || 0 === strpos($link, '//');
@@ -20,7 +20,7 @@ foreach ([
         $value[2]['rel'] = 'stylesheet';
         return new HTML($value);
     },
-    '*.js' => function($value, $key) {
+    '*.js' => function ($value, $key) {
         $link = $value['link'] ?? "";
         $path = $value['path'] ?? "";
         $x = false !== strpos($link, '://') || 0 === strpos($link, '//');
@@ -37,13 +37,13 @@ foreach ([
         $value[0] = 'script';
         return new HTML($value);
     },
-    'text/css' => function($value, $key) {
+    'text/css' => function ($value, $key) {
         $v = explode(';', $value['link'] ?? "", 2)[1] ?? "";
         $value[0] = 'style';
         $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr($v, 7)) : urldecode($v);
         return new HTML($value);
     },
-    'text/js' => function($value, $key) {
+    'text/js' => function ($value, $key) {
         $v = explode(';', $value['link'] ?? "", 2)[1] ?? "";
         $value[0] = 'script';
         $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr($v, 7)) : urldecode($v);
