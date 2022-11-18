@@ -92,7 +92,7 @@ final class Asset extends Genome {
             $i = 0;
             foreach ($path as $v) {
                 self::set($v, $stack + $i, $lot);
-                $i += .1;
+                $i += 0.1;
             }
         } else {
             $path = stream_resolve_include_path($path) ?: $path;
