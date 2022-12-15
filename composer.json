@@ -1,5 +1,5 @@
 {
-  "description": "Manage asset files without touching layout files.",
+  "description": "Manages asset files without touching the layout files.",
   "license": "GPL-3.0-or-later",
   "name": "mecha-cms/x.asset",
   "require": {
