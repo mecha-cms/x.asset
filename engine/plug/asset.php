@@ -55,7 +55,3 @@ foreach ([
 
 // <https://www.rfc-editor.org/rfc/rfc9239#name-text-javascript>
 Asset::_('text/javascript', Asset::_('text/js'));
-
-function asset(...$lot) {
-    return count($lot) < 2 ? Asset::get(...$lot) : Asset::set(...$lot);
-}
