@@ -8,7 +8,9 @@ type: Markdown
 version: 2.1.0
 ...
 
-Add, remove, or replace asset files from/to HTML without touching the layout files. This extension works by finding two special places in the HTML document, i.e. right before the `</head>` and `</body>` tag, and then process all assets that have been added to the storage to be rendered as HTML tags in both places.
+Add, remove, or replace asset files from/to HTML without touching the layout files. This extension works by finding two
+special places in the HTML document, i.e. right before the `</head>` and `</body>` tag, and then process all assets that
+have been added to the storage to be rendered as HTML tags in both places.
 
 ~~~ .html
 <!DOCTYPE html>
@@ -35,7 +37,10 @@ Asset::let(array|string $path = null);
 Asset::set(array|string $path = null, float $stack = 10, array $lot = []);
 ~~~
 
-The `$path` parameter can be an URL, a file path or a data URI. It can also be an array of those values. The `$stack` parameter is available only for the `set` method and serves to determine the insertion position between assets. The bigger the value, the lower the asset position will be. You use the `$lot` parameter to provide additional data. This data is useful for the asset parser. By default, this data will be used as HTML attributes.
+The `$path` parameter can be an URL, a file path or a data URI. It can also be an array of those values. The `$stack`
+parameter is available only for the `set` method and serves to determine the insertion position between assets. The
+bigger the value, the lower the asset position will be. You use the `$lot` parameter to provide additional data. This
+data is useful for the asset parser. By default, this data will be used as HTML attributes.
 
 ~~~ .php
 // Given this statement…
@@ -88,12 +93,14 @@ JS;
 Asset::set('data:text/js;base64,' . To::base64($script));
 ~~~
 
-You can also use the standard JavaScript MIME type as defined in [the specification](https://www.rfc-editor.org/rfc/rfc9239#name-text-javascript):
+You can also use the standard JavaScript MIME type as defined in
+[the specification](https://www.rfc-editor.org/rfc/rfc9239#name-text-javascript):
 
 ~~~ .php
 Asset::set('data:text/javascript;base64,' . To::base64($script));
 ~~~
 
-Shortly after being added, this extension will process the file path and then it will be rendered as `<link>` tags for CSS files and `<script>` tags for JavaScript files.
+Shortly after being added, this extension will process the file path and then it will be rendered as `<link>` tags for
+CSS files and `<script>` tags for JavaScript files.
 
-*[MIME]: Multipurpose Internet Mail Extensions
+ *[MIME]: Multipurpose Internet Mail Extensions
