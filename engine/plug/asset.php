@@ -38,15 +38,15 @@ foreach ([
         return new HTML($value);
     },
     'text/css' => static function ($value, $key) {
-        $v = explode(';', $value['link'] ?? "", 2)[1] ?? "";
+        $v = substr((string) strstr($value['link'] ?? "", ';'), 1);
         $value[0] = 'style';
-        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr($v, 7)) : urldecode($v);
+        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr(urldecode($v), 7)) : urldecode($v);
         return new HTML($value);
     },
     'text/js' => static function ($value, $key) {
-        $v = explode(';', $value['link'] ?? "", 2)[1] ?? "";
+        $v = substr((string) strstr($value['link'] ?? "", ';'), 1);
         $value[0] = 'script';
-        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr($v, 7)) : urldecode($v);
+        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr(urldecode($v), 7)) : urldecode($v);
         return new HTML($value);
     }
 ] as $k => $v) {
