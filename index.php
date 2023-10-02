@@ -8,20 +8,39 @@ namespace {
 
 namespace x\asset {
     function body($body) {
-        $js = \Hook::fire('asset.js', [\Asset::join('*.js')], null, \Asset::class);
+        $link = \Hook::fire('asset.js', [\Asset::join('*.js')], null, \Asset::class);
         $script = \Hook::fire('script', [\Asset::join('text/javascript') . \Asset::join('text/js')], null, \Asset::class);
-        return $body . $js . $script; // Put inline JS after remote JS
+        return \substr($body, 0, -7) . $link . $script . \substr($body, -7);
     }
     function content($content) {
-        return \strtr($content ?? "", [
-            '</body>' => \Hook::fire('body', [""], null, \Asset::class) . '</body>',
-            '</head>' => \Hook::fire('head', [""], null, \Asset::class) . '</head>'
-        ]);
+        // Capture the `<body>…</body>` part
+        $a = \strpos($content, ($s = '<body') . '>') ?: \strpos($content, $s . ' ') ?: \strpos($content, $s . "\n") ?: \strpos($content, $s . "\r") ?: \strpos($content, $s . "\t");
+        if (false !== $a) {
+            $b = \substr($content, 0, $a);
+            $d = \strpos($c = \substr($content, $a), '</body>');
+            if (false !== $d) {
+                $e = \substr($c, $d += 7);
+                $c = \substr($c, 0, $d);
+                $content = $b . \Hook::fire('body', [$c, $a, $d], null, \Asset::class) . $e;
+            }
+        }
+        // Capture the `<head>…</head>` part
+        $a = \strpos($content, ($s = '<head') . '>') ?: \strpos($content, $s . ' ') ?: \strpos($content, $s . "\n") ?: \strpos($content, $s . "\r") ?: \strpos($content, $s . "\t");
+        if (false !== $a) {
+            $b = \substr($content, 0, $a);
+            $d = \strpos($c = \substr($content, $a), '</head>');
+            if (false !== $d) {
+                $e = \substr($c, $d += 7);
+                $c = \substr($c, 0, $d);
+                $content = $b . \Hook::fire('head', [$c, $a, $d], null, \Asset::class) . $e;
+            }
+        }
+        return $content;
     }
     function head($head) {
-        $css = \Hook::fire('asset.css', [\Asset::join('*.css')], null, \Asset::class);
+        $link = \Hook::fire('asset.css', [\Asset::join('*.css')], null, \Asset::class);
         $style = \Hook::fire('style', [\Asset::join('text/css')], null, \Asset::class);
-        return $head . $css . $style; // Put inline CSS after remote CSS
+        return \substr($head, 0, -7) . $link . $style . \substr($head, -7);
     }
     \Hook::set('body', __NAMESPACE__ . "\\body", 10);
     \Hook::set('content', __NAMESPACE__ . "\\content", 0);
