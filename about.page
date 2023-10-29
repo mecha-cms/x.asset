@@ -100,7 +100,7 @@ You can also use the standard JavaScript MIME type as defined in
 Asset::set('data:text/javascript;base64,' . To::base64($script));
 ~~~
 
-Shortly after being added, this extension will process the file path and then it will be rendered as `<link>` tags for
-CSS files and `<script>` tags for JavaScript files.
+Shortly after being added, this extension will process the file path and then it will be rendered as `<link>` or
+`<style>` tags for CSS files and `<script>` tags for JavaScript files.
 
  *[MIME]: Multipurpose Internet Mail Extensions
