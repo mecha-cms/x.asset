@@ -8,8 +8,8 @@ namespace {
 
 namespace x\asset {
     function body($body) {
-        $script = \Asset::join('*.js') . \Asset::join('text/javascript') . \Asset::join('text/js');
-        return \substr($body, 0, -7) . $script . \substr($body, -7);
+        $v = \Asset::join('*.js') . \Asset::join('text/javascript') . \Asset::join('text/js');
+        return \substr($body, 0, -7) . $v . \substr($body, -7);
     }
     function content($content) {
         // Capture the `<body>…</body>` part
@@ -37,8 +37,8 @@ namespace x\asset {
         return $content;
     }
     function head($head) {
-        $style = \Asset::join('*.css') . \Asset::join('text/css');
-        return \substr($head, 0, -7) . $style . \substr($head, -7);
+        $v = \Asset::join('*.css') . \Asset::join('text/css');
+        return \substr($head, 0, -7) . $v . \substr($head, -7);
     }
     \Hook::set('body', __NAMESPACE__ . "\\body", 10);
     \Hook::set('content', __NAMESPACE__ . "\\content", 0);
