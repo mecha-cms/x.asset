@@ -40,13 +40,13 @@ foreach ([
     'text/css' => static function ($value, $key) {
         $v = substr((string) strstr($value['link'] ?? "", ';'), 1);
         $value[0] = 'style';
-        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr(urldecode($v), 7)) : urldecode($v);
+        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr(rawurldecode($v), 7)) : rawurldecode($v);
         return new HTML($value);
     },
     'text/js' => static function ($value, $key) {
         $v = substr((string) strstr($value['link'] ?? "", ';'), 1);
         $value[0] = 'script';
-        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr(urldecode($v), 7)) : urldecode($v);
+        $value[1] = 0 === strpos($v, 'base64,') ? base64_decode(substr(rawurldecode($v), 7)) : rawurldecode($v);
         return new HTML($value);
     }
 ] as $k => $v) {
