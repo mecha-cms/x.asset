@@ -12,26 +12,28 @@ namespace x\asset {
         return \substr($body, 0, -7) . $v . \substr($body, -7);
     }
     function content($content) {
-        // Capture the `<body>…</body>` part
-        $a = \strpos($content, ($s = '<body') . '>') ?: \strpos($content, $s . ' ') ?: \strpos($content, $s . "\n") ?: \strpos($content, $s . "\r") ?: \strpos($content, $s . "\t");
-        if (false !== $a) {
-            $b = \substr($content, 0, $a);
-            $d = \strpos($c = \substr($content, $a), '</body>');
-            if (false !== $d) {
-                $e = \substr($c, $d += 7);
-                $c = \substr($c, 0, $d);
-                $content = $b . \Hook::fire('body', [$c, $a, $d], null, \Asset::class) . $e;
+        // Capture the `<head>…</head>` part
+        if (
+            false !== ($a = \strpos($content, '<head>')) ||
+            false !== ($a = \strpos($content, '<head ')) ||
+            false !== ($a = \strpos($content, "<head\n")) ||
+            false !== ($a = \strpos($content, "<head\r")) ||
+            false !== ($a = \strpos($content, "<head\t"))
+        ) {
+            if (false !== ($b = \strpos($content, '</head>'))) {
+                $content = \substr($content, 0, $a) . \Hook::fire('head', [\substr($content, $a, ($b += 7) - $a)], null, \Asset::class) . \substr($content, $b);
             }
         }
-        // Capture the `<head>…</head>` part
-        $a = \strpos($content, ($s = '<head') . '>') ?: \strpos($content, $s . ' ') ?: \strpos($content, $s . "\n") ?: \strpos($content, $s . "\r") ?: \strpos($content, $s . "\t");
-        if (false !== $a) {
-            $b = \substr($content, 0, $a);
-            $d = \strpos($c = \substr($content, $a), '</head>');
-            if (false !== $d) {
-                $e = \substr($c, $d += 7);
-                $c = \substr($c, 0, $d);
-                $content = $b . \Hook::fire('head', [$c, $a, $d], null, \Asset::class) . $e;
+        // Capture the `<body>…</body>` part
+        if (
+            false !== ($a = \strpos($content, '<body>')) ||
+            false !== ($a = \strpos($content, '<body ')) ||
+            false !== ($a = \strpos($content, "<body\n")) ||
+            false !== ($a = \strpos($content, "<body\r")) ||
+            false !== ($a = \strpos($content, "<body\t"))
+        ) {
+            if (false !== ($b = \strpos($content, '</body>'))) {
+                $content = \substr($content, 0, $a) . \Hook::fire('body', [\substr($content, $a, ($b += 7) - $a)], null, \Asset::class) . \substr($content, $b);
             }
         }
         return $content;
