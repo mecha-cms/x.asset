@@ -30,13 +30,13 @@ final class Asset extends Genome {
 
     public static function join(string $x, string $join = "") {
         if ($v = self::_($x)) {
-            $fn = $v[0];
+            $task = $v[0];
             if (isset(self::$lot[1][$x])) {
                 $any = (new Anemone(self::$lot[1][$x]))->sort([1, 'stack'], true);
                 $out = [];
-                if (is_callable($fn)) {
+                if (is_callable($task)) {
                     foreach ($any as $k => $v) {
-                        $out[] = fire($fn, [$v, $k], static::class);
+                        $out[] = fire($task, [$v, $k], static::class);
                     }
                 } else {
                     foreach ($any as $k => $v) {

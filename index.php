@@ -12,6 +12,9 @@ namespace x\asset {
         return \substr($body, 0, -7) . $v . \substr($body, -7);
     }
     function content($content) {
+        if (!$content || false === \strpos($content, '</')) {
+            return $content;
+        }
         // Capture the `<head>…</head>` part
         if (
             false !== ($a = \strpos($content, '<head>')) ||
