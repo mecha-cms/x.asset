@@ -11,11 +11,11 @@ final class Asset extends Genome {
 
     public static function get($path = null, int $i = 1) {
         if (is_array($path)) {
-            $out = [];
+            $r = [];
             foreach ($path as $v) {
-                $out[$v] = self::get($v, $i);
+                $r[$v] = self::get($v, $i);
             }
-            return $out;
+            return $r;
         }
         if (isset($path)) {
             if (0 === strpos($path, 'data:')) {
@@ -32,20 +32,20 @@ final class Asset extends Genome {
         if ($v = self::_($x)) {
             $task = $v[0];
             if (isset(self::$lot[1][$x])) {
-                $any = (new Anemone(self::$lot[1][$x]))->sort([1, 'stack'], true);
-                $out = [];
+                $lot = (new Anemone(self::$lot[1][$x]))->sort([1, 'stack'], true);
+                $r = [];
                 if (is_callable($task)) {
-                    foreach ($any as $k => $v) {
-                        $out[] = fire($task, [$v, $k], static::class);
+                    foreach ($lot as $k => $v) {
+                        $r[] = fire($task, [$v, $k], static::class);
                     }
                 } else {
-                    foreach ($any as $k => $v) {
+                    foreach ($lot as $k => $v) {
                         if (isset($v['path']) && is_file($v['path'])) {
-                            $out[] = file_get_contents($v['path']);
+                            $r[] = file_get_contents($v['path']);
                         }
                     }
                 }
-                return implode($join, $out);
+                return implode($join, $r);
             }
         }
         return "";
@@ -58,12 +58,12 @@ final class Asset extends Genome {
             if (false === strpos($path, '://' . $host) && 0 !== strpos($path, '//' . $host)) {
                 return null;
             }
-            if ($path !== strtok($path, '?&#')) {
+            if ($path !== substr($path, 0, strcspn($path, '?&#'))) {
                 return null; // Internal URL, with query and/or hash part
             }
             $path = To::path($path);
         }
-        $path = strtok($path, '?&#'); // Ignore query and/or hash part in the file path
+        $path = substr($path, 0, strcspn($path, '?&#')); // Ignore query and/or hash part in the file path
         // Full path, be quick!
         if (0 === strpos($path = strtr($path, '/', D), PATH)) {
             return exist($path, 1) ?: null;
@@ -100,7 +100,7 @@ final class Asset extends Genome {
             }
         } else {
             $path = stream_resolve_include_path($path) ?: $path;
-            $x = 0 === strpos($path, 'data:') ? substr($path, 5, strpos($path, ';') - 5) : '*.' . pathinfo(strtok($path, '?&#'), PATHINFO_EXTENSION);
+            $x = 0 === strpos($path, 'data:') ? substr($path, 5, strpos($path, ';') - 5) : '*.' . pathinfo(substr($path, 0, strcspn($path, '?&#')), PATHINFO_EXTENSION);
             if (!isset(self::$lot[0][$x][$path])) {
                 self::$lot[1][$x][$path] = [
                     '0' => c2f(static::class),
