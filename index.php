@@ -16,25 +16,13 @@ namespace x\asset {
             return $content;
         }
         // Capture the `<head>…</head>` part
-        if (
-            false !== ($a = \strpos($content, '<head>')) ||
-            false !== ($a = \strpos($content, '<head ')) ||
-            false !== ($a = \strpos($content, "<head\n")) ||
-            false !== ($a = \strpos($content, "<head\r")) ||
-            false !== ($a = \strpos($content, "<head\t"))
-        ) {
+        if (false !== ($a = \strpos($content, '<head')) && \strspn($content, " \n\r\t>", $a + 5)) {
             if (false !== ($b = \strpos($content, '</head>'))) {
                 $content = \substr($content, 0, $a) . \Hook::fire('head', [\substr($content, $a, ($b += 7) - $a)], null, \Asset::class) . \substr($content, $b);
             }
         }
         // Capture the `<body>…</body>` part
-        if (
-            false !== ($a = \strpos($content, '<body>')) ||
-            false !== ($a = \strpos($content, '<body ')) ||
-            false !== ($a = \strpos($content, "<body\n")) ||
-            false !== ($a = \strpos($content, "<body\r")) ||
-            false !== ($a = \strpos($content, "<body\t"))
-        ) {
+        if (false !== ($a = \strpos($content, '<body')) && \strspn($content, " \n\r\t>", $a + 5)) {
             if (false !== ($b = \strpos($content, '</body>'))) {
                 $content = \substr($content, 0, $a) . \Hook::fire('body', [\substr($content, $a, ($b += 7) - $a)], null, \Asset::class) . \substr($content, $b);
             }
