@@ -6,7 +6,7 @@ final class Asset extends Genome {
 
     public static function URL(string $url) {
         $path = self::path($url);
-        return isset($path) ? To::URL($path) : (false !== strpos($url, '://') || 0 === strpos($url, '//') || 0 === strpos($url, 'data:') ? $url : null);
+        return isset($path) ? To::link($path) : (false !== strpos($url, '://') || 0 === strpos($url, '//') || 0 === strpos($url, 'data:') ? $url : null);
     }
 
     public static function get($path = null, int $i = 1) {
