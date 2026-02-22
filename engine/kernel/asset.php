@@ -4,11 +4,6 @@ final class Asset extends Genome {
 
     public static $lot = [];
 
-    public static function URL(string $url) {
-        $path = self::path($url);
-        return isset($path) ? To::link($path) : (false !== strpos($url, '://') || 0 === strpos($url, '//') || 0 === strpos($url, 'data:') ? $url : null);
-    }
-
     public static function get($path = null, int $i = 1) {
         if (is_array($path)) {
             $r = [];
@@ -51,15 +46,20 @@ final class Asset extends Genome {
         return "";
     }
 
+    public static function link(string $link) {
+        $path = self::path($link);
+        return isset($path) ? To::link($path) : (false !== strpos($link, '://') || 0 === strpos($link, '//') || 0 === strpos($link, 'data:') ? $link : null);
+    }
+
     public static function path(string $path) {
         if (false !== strpos($path, '://') || 0 === strpos($path, '//') || 0 === strpos($path, 'data:')) {
-            // External URL, nothing to check!
+            // External link, nothing to check!
             $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? "";
             if (false === strpos($path, '://' . $host) && 0 !== strpos($path, '//' . $host)) {
                 return null;
             }
             if ($path !== substr($path, 0, strcspn($path, '?&#'))) {
-                return null; // Internal URL, with query and/or hash part
+                return null; // Internal link, with query and/or hash part
             }
             $path = To::path($path);
         }
@@ -106,7 +106,7 @@ final class Asset extends Genome {
                     '0' => c2f(static::class),
                     '1' => "",
                     '2' => $lot,
-                    'link' => self::URL($path),
+                    'link' => self::link($path),
                     'path' => self::path($path),
                     'stack' => (float) $stack
                 ];
