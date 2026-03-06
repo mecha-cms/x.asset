@@ -26,8 +26,10 @@ final class Asset extends Genome {
     public static function join(string $x, string $join = "") {
         if ($v = self::_($x)) {
             $task = $v[0];
-            if (isset(self::$lot[1][$x])) {
-                $lot = (new Anemone(self::$lot[1][$x]))->sort([1, 'stack'], true);
+            if ($lot = self::$lot[1][$x] ?? 0) {
+                usort($lot, function ($a, $b) {
+                    return $a['stack'] <=> $b['stack'];
+                });
                 $r = [];
                 if (is_callable($task)) {
                     foreach ($lot as $k => $v) {
@@ -103,7 +105,7 @@ final class Asset extends Genome {
             $x = 0 === strpos($path, 'data:') ? substr($path, 5, strpos($path, ';') - 5) : '*.' . pathinfo(substr($path, 0, strcspn($path, '?&#')), PATHINFO_EXTENSION);
             if (!isset(self::$lot[0][$x][$path])) {
                 self::$lot[1][$x][$path] = [
-                    '0' => c2f(static::class),
+                    '0' => null,
                     '1' => "",
                     '2' => $lot,
                     'link' => self::link($path),
