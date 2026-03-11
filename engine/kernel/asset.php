@@ -1,6 +1,6 @@
 <?php
 
-final class Asset extends Genome {
+final class Asset extends Proxy {
 
     public static $lot = [];
 
